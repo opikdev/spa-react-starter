@@ -61,3 +61,11 @@ export async function signUpThroughApi(page: Page): Promise<string> {
   expect(login.status()).toBe(201);
   return email;
 }
+
+export async function signUpWithData(page: Page): Promise<Record<string, string>> {
+  await signUpThroughApi(page);
+  const note = await page.request.post('/api/v1/notes', { data: { title: 'Every page' } });
+  expect(note.status()).toBe(201);
+  const { id } = await note.json();
+  return { noteId: id };
+}

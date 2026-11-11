@@ -1,4 +1,6 @@
-import { expect, expectAccessible, signUpThroughApi, test } from './fixtures';
+import type { Page } from '@playwright/test';
+import { expect, expectAccessible, signUpWithData, test } from './fixtures';
+import { type AppPage, pageUrl, publicPages, signedInPages } from './pages';
 
 test('applies the stored theme before the app runs', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
@@ -11,32 +13,42 @@ test('applies the stored theme before the app runs', async ({ page }) => {
   );
 });
 
-test('renders every page accessibly in light and dark themes', async ({ page }) => {
-  await signUpThroughApi(page);
-  const note = await page.request.post('/api/v1/notes', { data: { title: 'Themes' } });
-  const { id } = await note.json();
+const themes = [
+  { choice: 'Light', dark: false },
+  { choice: 'Dark', dark: true },
+];
+
+async function chooseTheme(page: Page, choice: string, dark: boolean) {
   const theme = page.getByRole('group', { name: 'Theme' });
+  await theme.getByRole('button', { name: choice }).click();
+  await expect(theme.getByRole('button', { name: choice })).toHaveAttribute('aria-pressed', 'true');
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.classList.contains('dark')))
+    .toBe(dark);
+}
 
-  for (const { choice, dark } of [
-    { choice: 'Light', dark: false },
-    { choice: 'Dark', dark: true },
-  ]) {
-    await page.goto('/notes');
-    await theme.getByRole('button', { name: choice }).click();
-    await expect(theme.getByRole('button', { name: choice })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    await expect
-      .poll(() => page.evaluate(() => document.documentElement.classList.contains('dark')))
-      .toBe(dark);
+async function expectPagesAccessible(page: Page, pages: AppPage[], params: Record<string, string>) {
+  for (const { path, heading } of pages) {
+    await page.goto(pageUrl(path, params));
+    await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
     await expectAccessible(page);
+  }
+}
 
-    for (const path of ['/notes/new', `/notes/${id}`]) {
-      await page.goto(path);
-      await expect(page.locator('main h1')).toBeVisible();
-      await expectAccessible(page);
-    }
+test('renders every page accessibly in light and dark themes', async ({ page }) => {
+  for (const { choice, dark } of themes) {
+    await page.goto('/login');
+    await chooseTheme(page, choice, dark);
+    await expectPagesAccessible(page, publicPages, {});
+  }
+
+  const params = await signUpWithData(page);
+  for (const { choice, dark } of themes) {
+    await page.goto('/notes');
+    await chooseTheme(page, choice, dark);
+    await expectPagesAccessible(page, signedInPages, params);
+
+    await page.goto(pageUrl('/notes/$noteId', params));
     await page.getByRole('button', { name: 'Delete note' }).click();
     await expect(page.getByRole('alertdialog')).toBeVisible();
     await expectAccessible(page);

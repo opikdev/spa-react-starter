@@ -1,33 +1,37 @@
 import { chromium } from '@playwright/test';
 import lighthouse from 'lighthouse';
-import { expect, signUpThroughApi, test } from './fixtures';
+import { expect, signUpWithData, test } from './fixtures';
+import { pageUrl, publicPages, signedInPages } from './pages';
 
 const budgets = { performance: 0.95, accessibility: 1, 'best-practices': 1 };
 const debuggingPort = 9333;
+const signedOutSessionCheckLogs401 = ['errors-in-console'];
 
-test('meets the Lighthouse budgets on every signed-in page', async ({ baseURL }, testInfo) => {
-  test.setTimeout(180_000);
+test('meets the Lighthouse budgets on every page', async ({ baseURL }, testInfo) => {
+  test.setTimeout(300_000);
   const context = await chromium.launchPersistentContext(testInfo.outputPath('profile'), {
     args: [`--remote-debugging-port=${debuggingPort}`],
   });
   const page = await context.newPage();
-  await signUpThroughApi(page);
-  const note = await page.request.post('/api/v1/notes', { data: { title: 'Lighthouse' } });
-  const { id } = await note.json();
 
   const scores: Record<string, Record<string, number | null>> = {};
-  for (const path of ['/notes', '/notes/new', `/notes/${id}`]) {
+  async function audit(path: string, skipAudits: string[] = []) {
     const result = await lighthouse(`${baseURL}${path}`, {
       port: debuggingPort,
       logLevel: 'error',
       onlyCategories: Object.keys(budgets),
       disableStorageReset: true,
+      skipAudits,
     });
     const categories = result?.lhr.categories ?? {};
     scores[path] = Object.fromEntries(
       Object.keys(budgets).map((name) => [name, categories[name]?.score ?? null]),
     );
   }
+
+  for (const { path } of publicPages) await audit(path, signedOutSessionCheckLogs401);
+  const params = await signUpWithData(page);
+  for (const { path } of signedInPages) await audit(pageUrl(path, params));
   await context.close();
   console.log(JSON.stringify(scores, null, 2));
 
