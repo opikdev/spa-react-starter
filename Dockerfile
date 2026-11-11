@@ -8,7 +8,9 @@ RUN pnpm build
 
 FROM nginxinc/nginx-unprivileged:1.31.7-alpine3.24 AS runtime
 USER root
-RUN rm /etc/nginx/conf.d/default.conf /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+RUN apk upgrade --no-cache \
+    && apk del --no-cache curl \
+    && rm /etc/nginx/conf.d/default.conf /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template
