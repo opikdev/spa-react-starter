@@ -208,6 +208,57 @@ describe('editing a note', () => {
     await waitFor(() => expect(noteTitled('Launch plan v2')?.version).toBe(3));
   });
 
+  it('puts the API’s field errors on the fields', async () => {
+    worker.use(
+      http.patch('/api/v1/notes/:id', () =>
+        HttpResponse.json(
+          {
+            type: 'urn:problem:validation-failed',
+            title: 'Request validation failed',
+            status: 400,
+            errors: [{ field: 'title', detail: 'Contains a blocked word' }],
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    const user = userEvent.setup();
+    await openNote('Launch checklist');
+
+    await user.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    expect(await screen.findByText('Contains a blocked word')).toBeVisible();
+    expect(screen.getByLabelText('Title')).toHaveFocus();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('shows the request ID when saving fails', async () => {
+    worker.use(
+      http.patch('/api/v1/notes/:id', () =>
+        HttpResponse.json(
+          { type: 'urn:problem:internal-error', title: 'Internal error', status: 500 },
+          { status: 500, headers: { 'X-Request-Id': 'req_save' } },
+        ),
+      ),
+    );
+    const user = userEvent.setup();
+    await openNote('Launch checklist');
+
+    await user.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    expect(await screen.findByRole('alert')).toMatchTextContent(/request ID req_save/);
+    expect(screen.queryByText('Changes saved.')).toBeNull();
+  });
+
+  it('refuses to edit a note the API sent without an ETag', async () => {
+    const note = noteTitled('Launch checklist');
+    worker.use(http.get('/api/v1/notes/:id', () => HttpResponse.json(note)));
+    renderApp(`/notes/${note?.id}`);
+
+    expect(await screen.findByRole('heading', { name: 'This page didn’t load' })).toBeVisible();
+    expect(screen.queryByLabelText('Title')).toBeNull();
+  });
+
   it('offers to load the latest version after a conflict', async () => {
     const user = userEvent.setup();
     const title = await openNote('Launch checklist');

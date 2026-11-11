@@ -81,6 +81,36 @@ describe('logging in', () => {
 
     expect(await screen.findByRole('heading', { name: 'New note' })).toBeVisible();
   });
+
+  it('opens the notes when already logged in and no page was asked for', async () => {
+    logInAsDemo();
+    renderApp('/login');
+
+    expect(await screen.findByRole('heading', { name: 'Your notes' })).toBeVisible();
+  });
+
+  it('puts the API’s field errors on the fields', async () => {
+    worker.use(
+      http.post('/api/v1/sessions', () =>
+        HttpResponse.json(
+          {
+            type: 'urn:problem:validation-failed',
+            title: 'Request validation failed',
+            status: 400,
+            errors: [{ field: 'email', detail: 'Use your work email address.' }],
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    renderApp('/login');
+
+    await logIn('ada@example.com', 'correct-horse-battery');
+
+    expect(await screen.findByText('Use your work email address.')).toBeVisible();
+    expect(screen.getByLabelText('Email')).toHaveFocus();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
 });
 
 describe('registering', () => {
@@ -90,6 +120,13 @@ describe('registering', () => {
     await user.type(screen.getByLabelText(/^Password/), password);
     await user.click(screen.getByRole('button', { name: 'Create account' }));
   }
+
+  it('skips the form when already logged in', async () => {
+    logInAsDemo();
+    renderApp('/register');
+
+    expect(await screen.findByRole('heading', { name: 'Your notes' })).toBeVisible();
+  });
 
   it('creates the account and logs in', async () => {
     renderApp('/register');
@@ -178,6 +215,19 @@ describe('logging out', () => {
       /^Can’t reach the server\./,
     );
     expect(screen.getByRole('heading', { name: 'Your notes' })).toBeVisible();
+  });
+
+  it('treats a session that already ended as logged out', async () => {
+    logInAsDemo();
+    renderApp('/notes');
+    await screen.findByText('Launch checklist');
+    db.currentUserId = null;
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('button', { name: 'Log out' }));
+
+    expect(await screen.findByRole('heading', { name: 'Log in' })).toBeVisible();
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 
   it('sends the user to log in when the session expires', async () => {
