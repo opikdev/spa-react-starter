@@ -14,6 +14,7 @@
     "dev:mock": "vite --mode mock",
     "build": "vite build && node scripts/compress.ts",
     "preview": "vite preview",
+    "prepare": "if [ \"$(git rev-parse --show-toplevel 2>/dev/null)\" = \"$(pwd -P)\" ]; then git config core.hooksPath .githooks; fi",
     "gen:api": "scripts/gen-api.sh",
     "gen:routes": "tsr generate",
     "check:api": "scripts/check-api.sh",
