@@ -22,6 +22,7 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 | Run all gates | `pnpm verify` |
 | Test the image against an example API | `pnpm test:e2e`, with `E2E_API` set to `hono`, `go`, or `fastapi` |
 | Regenerate API types | `pnpm gen:api` |
+| Regenerate the route tree after adding, moving, or deleting a route file | `pnpm gen:routes` |
 
 ## Rules
 
@@ -29,7 +30,7 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 - Run `pnpm verify` before calling work done. For changes to Docker, nginx, Compose, headers, or a user flow, run `pnpm test:e2e` too. It needs Docker.
 - If the check blocks you, fix the cause. Never edit `.agents/check.sh`, `.githooks/`, or the harness workflow to get past it, and never use `--no-verify`. If the request can't be done without that, stop and ask.
 - After cloning, run `git config core.hooksPath .githooks` once to turn on the hook.
-- The app relies only on [the API contract](docs/api-contract.md). Never import from another starter. Change the contract in `openapi.yaml`, `src/mocks/`, and the docs together, then run `pnpm gen:api`. Never edit `src/lib/api/schema.d.ts` or `src/routeTree.gen.ts` by hand.
+- The app relies only on [the API contract](docs/api-contract.md). Never import from another starter. Change the contract in `openapi.yaml`, `src/mocks/`, and the docs together, then run `pnpm gen:api`. Never edit `src/lib/api/schema.d.ts` or `src/routeTree.gen.ts` by hand. `pnpm verify` fails when either is stale.
 - Never handle the session token, and never store anything sensitive in `localStorage`, `sessionStorage`, or URLs.
 - Call the API only from a feature's `api.ts`, through `request()` in `src/lib/api/request.ts`. Import another feature only through its `index.ts`. `test/architecture.test.ts` enforces both.
 - Load page data in the route's `loader` with `ensureQueryData`, and read it with `useSuspenseQuery`.

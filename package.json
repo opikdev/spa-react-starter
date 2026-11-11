@@ -15,7 +15,9 @@
     "build": "vite build && node scripts/compress.ts",
     "preview": "vite preview",
     "gen:api": "scripts/gen-api.sh",
+    "gen:routes": "tsr generate",
     "check:api": "scripts/check-api.sh",
+    "check:routes": "scripts/check-routes.sh",
     "check:bundle": "pnpm build && size-limit && scripts/check-bundle.sh",
     "format": "biome format --write .",
     "lint": "biome check .",
@@ -23,7 +25,7 @@
     "test": "vitest run",
     "test:coverage": "COVERAGE=true vitest run --coverage",
     "test:e2e": "playwright test",
-    "verify": "pnpm lint && pnpm typecheck && pnpm check:api && pnpm test && pnpm test:coverage && pnpm check:bundle && .agents/check.sh && .github/scripts/check-repo-standards.sh"
+    "verify": "pnpm lint && pnpm check:routes && pnpm typecheck && pnpm check:api && pnpm test && pnpm test:coverage && pnpm check:bundle && .agents/check.sh && .github/scripts/check-repo-standards.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -46,6 +48,7 @@
     "@rolldown/plugin-babel": "^0.3.1",
     "@size-limit/file": "^14.3.0",
     "@tailwindcss/vite": "^4.3.5",
+    "@tanstack/router-cli": "1.168.0",
     "@tanstack/router-plugin": "^1.169.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.9",

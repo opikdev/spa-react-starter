@@ -60,7 +60,8 @@ pnpm dev:mock
 | Run against the API in `API_UPSTREAM` | `pnpm dev` |
 | Run against the in-memory mock API | `pnpm dev:mock` |
 | Regenerate the API types from `API_SCHEMA` | `pnpm gen:api` |
-| Run lint, types, API type freshness, tests, coverage, bundle budgets, and repo checks | `pnpm verify` |
+| Regenerate `src/routeTree.gen.ts` after adding, moving, or deleting a route file | `pnpm gen:routes` |
+| Run lint, route tree and API type freshness, types, tests, coverage, bundle budgets, and repo checks | `pnpm verify` |
 | Run the end-to-end tests against the image and an example API | `pnpm test:e2e` |
 | Build the production files into `dist/` | `pnpm build` |
 | Add a shadcn/ui component | `pnpm exec shadcn add <component>` |

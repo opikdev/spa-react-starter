@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      tanstackRouter({ target: 'react', autoCodeSplitting: !isTest, quoteStyle: 'single' }),
+      tanstackRouter({ autoCodeSplitting: !isTest }),
       react(),
       compile && babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),

@@ -10,6 +10,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Light, dark, and system theme toggle in the header. The choice is saved in `localStorage` and applied before first paint by `public/theme.js`, so the CSP stays strict.
 - Notes app in React 19 with the React Compiler, TanStack Router, and TanStack Query: sign-up, login, logout, and notes with cursor pagination, idempotent creates, and edits that resolve version conflicts.
 - Typed API client generated from `openapi.yaml`, with problem details mapped to messages and form fields.
+- `pnpm gen:routes` regenerates the route tree, and `pnpm verify` fails when it or the API types are stale.
 - Cookie sessions through a same-origin `/api/` proxy, set by `API_UPSTREAM` at runtime.
 - In-memory mock API for `pnpm dev:mock` and the component tests.
 - About 131 kB of initial JavaScript, under a 144 kB budget. Zod and the forms load only with the pages that use them.

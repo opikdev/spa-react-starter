@@ -27,7 +27,7 @@ A 401 from any call, other than a wrong password, marks the user logged out and 
 | `src/main.tsx` | Starts the mock API in mock mode, then renders the app |
 | `src/app.tsx` | Creates the query client and router, and wires session loss to the login redirect |
 | `src/router.tsx` | Router settings: preloading, default pending, error, and not found views |
-| `src/routes/` | File routes. `routeTree.gen.ts` is generated from them |
+| `src/routes/` | File routes. `pnpm gen:routes` generates `routeTree.gen.ts` from them, with the settings in `tsr.config.json` |
 | `src/features/auth/` | Session query, login, logout, sign-up, and the redirect check |
 | `src/features/notes/` | Notes queries and mutations, the list, and the create and edit forms |
 | `src/lib/api/` | Generated `schema.d.ts`, the `openapi-fetch` client, `request()`, and `ApiError` with user messages |

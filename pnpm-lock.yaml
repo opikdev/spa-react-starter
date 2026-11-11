@@ -223,6 +223,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.5
         version: 4.3.5(vite@8.3.8(@types/node@26.6.6)(jiti@2.7.0))
+      '@tanstack/router-cli':
+        specifier: 1.168.0
+        version: 1.168.0(supports-color@10.2.2)
       '@tanstack/router-plugin':
         specifier: ^1.169.0
         version: 1.169.0(@tanstack/react-router@1.170.46(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(rolldown@1.2.18)(supports-color@10.2.2)(vite@8.3.8(@types/node@26.6.6)(jiti@2.7.0))
@@ -1249,6 +1252,11 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  '@tanstack/router-cli@1.168.0':
+    resolution: {integrity: sha512-bjonksrARN9TUQYZo0bZO41fQq8EfFNfh/WAuax0NmZJHghHcp+FQegSdUjjTsTwp9SlokLju1Gbwzyp7dmvCw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    hasBin: true
+
   '@tanstack/router-core@1.171.39':
     resolution: {integrity: sha512-qUhoJ0meuSUqGYQbHbcJYdASr06YtK+bulbj6vtrhKYFkLgkSsZ6tXmMyym7sFxiSJSPYgasgozrL01LyyR/6A==}
     engines: {node: '>=20.19'}
@@ -1663,6 +1671,10 @@ packages:
   bundle-name@4.1.1:
     resolution: {integrity: sha512-DdH81/zPLVS11EUgWq3tEu/xn+EzljlMYooDNdzWEnFha3R3NBMpMV1UqYIpjYHV/SgpFKMIX1Oh7o06SjM/oA==}
     engines: {node: '>=18'}
+
+  cac@7.1.0:
+    resolution: {integrity: sha512-LMDU/U2yA4IPIY8KT0NsNPWEYZvAMkbgyspxJ6btJaYV+WMDOHAZCmB0lsTObiHaRS1V/ztKAl7+TSkTqXyeoA==}
+    engines: {node: '>=20.19.0'}
 
   caniuse-lite@1.0.30001823:
     resolution: {integrity: sha512-TQ5s/djDjNk1axreUW+4rULH+BmdCMLiJkhaXnO5wqivG7tITkSUj4ItIdzqdZHKaXcHAV8dhH3JxOM7/7bwqw==}
@@ -3946,6 +3958,14 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       use-sync-external-store: 1.7.0(react@19.3.1)
 
+  '@tanstack/router-cli@1.168.0(supports-color@10.2.2)':
+    dependencies:
+      '@tanstack/router-generator': 1.168.0(supports-color@10.2.2)
+      cac: 7.1.0
+      chokidar: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@tanstack/router-core@1.171.39':
     dependencies:
       '@tanstack/history': 1.162.5
@@ -4328,6 +4348,8 @@ snapshots:
   bundle-name@4.1.1:
     dependencies:
       run-applescript: 7.1.0
+
+  cac@7.1.0: {}
 
   caniuse-lite@1.0.30001823: {}
 
