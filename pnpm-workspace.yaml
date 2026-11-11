@@ -1,0 +1,5 @@
+allowBuilds:
+  msw: false
+minimumReleaseAgeExclude:
+  - msw@3.0.5
+  - vite@8.3.8
