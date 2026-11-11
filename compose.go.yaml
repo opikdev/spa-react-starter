@@ -1,0 +1,26 @@
+# Runs the Go example API instead of the TypeScript one:
+# docker compose -f compose.yaml -f compose.go.yaml up --build --wait web
+services:
+  api-migrate:
+    image: ghcr.io/opikdev/api-go-starter:0.3.0
+    command: [migrate]
+    environment:
+      MIGRATION_DATABASE_URL: postgres://api_owner:api_owner_dev_password@api-db:5432/api?sslmode=disable
+
+  api-seed:
+    image: ghcr.io/opikdev/api-go-starter:0.3.0
+    command: [seed]
+    environment:
+      MIGRATION_DATABASE_URL: postgres://api_owner:api_owner_dev_password@api-db:5432/api?sslmode=disable
+      SEED_DEMO_DATA: "true"
+    depends_on:
+      api-migrate:
+        condition: service_completed_successfully
+
+  api:
+    image: ghcr.io/opikdev/api-go-starter:0.3.0
+    environment:
+      DATABASE_URL: postgres://api_app:api_app_dev_password@api-db:5432/api?sslmode=disable
+    depends_on:
+      api-seed:
+        condition: service_completed_successfully

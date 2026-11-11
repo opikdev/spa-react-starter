@@ -1,0 +1,61 @@
+name: spa-react-starter
+
+services:
+  web:
+    build: .
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      API_UPSTREAM: ${API_UPSTREAM:-http://api:3000}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 127.0.0.1:${WEB_PORT:-8080}:8080
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Everything below is an example API that meets docs/api-contract.md. Replace it with your own.
+  # compose.go.yaml and compose.fastapi.yaml swap in the Go or FastAPI example instead.
+  api-db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: api_owner
+      POSTGRES_PASSWORD: api_owner_dev_password
+      POSTGRES_DB: api
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - api-data:/var/lib/postgresql
+    healthcheck:
+      # Over TCP, because the temporary server used during first-time setup only listens on a socket.
+      test: [CMD-SHELL, pg_isready -h 127.0.0.1 -U api_owner -d api]
+      interval: 2s
+      timeout: 3s
+      retries: 90
+
+  api-migrate:
+    image: ghcr.io/opikdev/api-hono-starter:0.4.0
+    command: [sh, -c, node src/db/migrate.ts && node src/db/seed.ts]
+    environment:
+      MIGRATION_DATABASE_URL: postgres://api_owner:api_owner_dev_password@api-db:5432/api
+      SEED_DEMO_DATA: "true"
+    depends_on:
+      api-db:
+        condition: service_healthy
+
+  api:
+    image: ghcr.io/opikdev/api-hono-starter:0.4.0
+    environment:
+      DATABASE_URL: postgres://api_app:api_app_dev_password@api-db:5432/api
+      TRUST_PROXY_HOPS: "1"
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-300}
+      AUTH_RATE_LIMIT_PER_MINUTE: ${AUTH_RATE_LIMIT_PER_MINUTE:-10}
+    ports:
+      - 127.0.0.1:${API_PORT:-3000}:3000
+    depends_on:
+      api-migrate:
+        condition: service_completed_successfully
+
+volumes:
+  api-data:
