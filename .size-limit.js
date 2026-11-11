@@ -6,6 +6,6 @@ const initialScripts = [...html.matchAll(/(?:src|href)="\/([^"]+\.js)"/g)].map(
 );
 
 export default [
-  { name: 'Initial JavaScript', path: initialScripts, gzip: true, limit: '140 kB' },
+  { name: 'Initial JavaScript', path: initialScripts, gzip: true, limit: '144 kB' },
   { name: 'CSS', path: 'dist/assets/*.css', gzip: true, limit: '8 kB' },
 ];

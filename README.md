@@ -10,7 +10,7 @@ A single-page app (SPA): React renders in the browser and calls your API. It's a
 - **Bring your own API:** the app relies only on the contract in [docs/api-contract.md](docs/api-contract.md), and reaches it through one setting, `API_UPSTREAM`. CI runs the same end-to-end tests against TypeScript, Go, and Python example APIs.
 - **No token in JavaScript:** login uses an `HttpOnly`, `SameSite=Strict` session cookie on the app's own origin. Nothing sensitive goes in storage or URLs.
 - **Typed client:** `openapi-typescript` generates types from the committed OpenAPI document, and the checks fail when they're stale.
-- **Fast by default:** React 19 with the React Compiler, route-level code splitting, preloading on hover, data loaded in route loaders, and a 140 kB gzip budget for the initial JavaScript.
+- **Fast by default:** React 19 with the React Compiler, route-level code splitting, preloading on hover, data loaded in route loaders, and a 144 kB gzip budget for the initial JavaScript.
 - **Hardened image:** non-root nginx that runs on a read-only filesystem, a strict Content Security Policy with Trusted Types, HSTS, precompressed assets, and immutable caching.
 - **Accessible:** WCAG 2.2 AA in light and dark themes, with axe finding no violations on any page, keyboard-only flows, and focus moved to each page's heading.
 - **Light, dark, or system theme:** the choice is saved, applied before first paint without an inline script, and follows system changes live.

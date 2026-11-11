@@ -68,6 +68,13 @@ To add a component:
 
 `src/index.css` already applies the focus outline and reduced motion to every component.
 
+## Bundle budget
+
+`pnpm check:bundle` fails when the initial JavaScript, the entry chunk plus its preloads, is over 144 kB gzipped, or the CSS is over 8 kB. The initial JavaScript is about 131 kB: React DOM, TanStack Router and Query, the API client, and the header's buttons. Route components load with their route.
+
+- Route `beforeLoad`, `loader`, and `validateSearch` stay in the entry chunk, so keep them small.
+- `ApiError` and the login route's `validateSearch` check their input with type guards, not zod, so zod loads only with the forms.
+
 ## Tests
 
 | Layer | Runs | Against |

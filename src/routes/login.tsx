@@ -1,14 +1,15 @@
 import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
-import { z } from 'zod/mini';
 import { PageHeading } from '@/components/page-heading';
 import { isInternalPath, LoginForm, sessionQueryOptions } from '@/features/auth';
 
-const searchSchema = z.object({
-  redirect: z.catch(z.optional(z.string().check(z.refine(isInternalPath))), undefined),
-});
+function validateSearch({ redirect }: Record<string, unknown>): { redirect?: string | undefined } {
+  return {
+    redirect: typeof redirect === 'string' && isInternalPath(redirect) ? redirect : undefined,
+  };
+}
 
 export const Route = createFileRoute('/login')({
-  validateSearch: searchSchema,
+  validateSearch,
   beforeLoad: async ({ context, search }) => {
     if (await context.queryClient.ensureQueryData(sessionQueryOptions)) {
       throw redirect({ href: search.redirect ?? '/notes' });

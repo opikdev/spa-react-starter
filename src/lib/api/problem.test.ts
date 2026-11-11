@@ -34,6 +34,22 @@ describe('ApiError', () => {
     expect(error.requestId).toBeNull();
     expect(error.retryAfterSeconds).toBeNull();
   });
+
+  it.each([
+    ['an array', [{ type: problemTypes.notFound }]],
+    ['a detail that isn’t text', { type: problemTypes.notFound, detail: 404 }],
+    [
+      'malformed field errors',
+      { type: problemTypes.validationFailed, errors: [{ field: 'title' }] },
+    ],
+    ['field errors that aren’t a list', { type: problemTypes.validationFailed, errors: {} }],
+  ])('ignores a problem with %s', (_, body) => {
+    const error = apiError(400, body);
+
+    expect(error.type).toBe('about:blank');
+    expect(error.detail).toBe('Status text');
+    expect(error.fieldErrors).toEqual([]);
+  });
 });
 
 describe('errorMessage', () => {

@@ -1,5 +1,3 @@
-import { z } from 'zod/mini';
-
 export const problemTypes = {
   validationFailed: 'urn:problem:validation-failed',
   invalidCredentials: 'urn:problem:invalid-credentials',
@@ -11,13 +9,26 @@ export const problemTypes = {
   rateLimited: 'urn:problem:rate-limited',
 } as const;
 
-const problemSchema = z.object({
-  type: z.string(),
-  detail: z.optional(z.string()),
-  errors: z.optional(z.array(z.object({ field: z.string(), detail: z.string() }))),
-});
-
 export type FieldError = { field: string; detail: string };
+
+type Problem = { type: string; detail?: string; errors?: FieldError[] };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isFieldError(value: unknown): value is FieldError {
+  return isRecord(value) && typeof value.field === 'string' && typeof value.detail === 'string';
+}
+
+function isProblemBody(body: unknown): body is Problem {
+  return (
+    isRecord(body) &&
+    typeof body.type === 'string' &&
+    (body.detail === undefined || typeof body.detail === 'string') &&
+    (body.errors === undefined || (Array.isArray(body.errors) && body.errors.every(isFieldError)))
+  );
+}
 
 export class ApiError extends Error {
   readonly status: number;
@@ -28,14 +39,14 @@ export class ApiError extends Error {
   readonly retryAfterSeconds: number | null;
 
   constructor(response: Response, body: unknown) {
-    const problem = problemSchema.safeParse(body);
-    const type = problem.success ? problem.data.type : 'about:blank';
+    const problem = isProblemBody(body) ? body : undefined;
+    const type = problem?.type ?? 'about:blank';
     super(`${response.status} ${type}`);
     this.name = 'ApiError';
     this.status = response.status;
     this.type = type;
-    this.detail = (problem.success && problem.data.detail) || response.statusText;
-    this.fieldErrors = (problem.success && problem.data.errors) || [];
+    this.detail = problem?.detail || response.statusText;
+    this.fieldErrors = problem?.errors ?? [];
     this.requestId = response.headers.get('X-Request-Id');
     this.retryAfterSeconds = parseRetryAfter(response.headers.get('Retry-After'));
   }
