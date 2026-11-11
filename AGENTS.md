@@ -27,9 +27,9 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 ## Rules
 
 - Don't commit until `pnpm verify` passes. Its tests need Playwright's Chromium: `pnpm exec playwright install chromium`.
-- Run `pnpm verify` before calling work done. For changes to Docker, nginx, Compose, headers, or a user flow, run `pnpm test:e2e` too. It needs Docker.
+- Before calling work done, run `pnpm verify`. If you changed a page, route, user flow, Docker, nginx, Compose, or headers, also run `pnpm test:e2e`, which needs Docker. Report both results.
 - To add or move a page, follow the [add-page skill](.agents/skills/add-page/SKILL.md).
-- If the check blocks you, fix the cause. Never edit `.agents/check.sh`, `.githooks/`, or the harness workflow to get past it, and never use `--no-verify`. If the request can't be done without that, stop and ask.
+- If a check blocks you, fix the cause. Never edit a check, a budget, or a threshold to get past it: `.agents/check.sh`, `.githooks/`, the harness workflow, `scripts/check-*.sh`, `.size-limit.js`, the coverage thresholds in `vite.config.ts`, the budgets in `e2e/lighthouse.spec.ts`, the CSP in `docker/nginx/`, `biome.json`, `tsconfig.json`, `test/architecture.test.ts`, or `test/pages.test.ts`. Never skip a test or use `--no-verify`. If the request can't be done without that, stop and ask.
 - `pnpm install` turns on the pre-commit hook in `.githooks/` when the folder is a Git repo root.
 - The app relies only on [the API contract](docs/api-contract.md). Never import from another starter. Change the contract in `openapi.yaml`, `src/mocks/`, and the docs together, then run `pnpm gen:api`. Never edit `src/lib/api/schema.d.ts` or `src/routeTree.gen.ts` by hand. `pnpm verify` fails when either is stale.
 - Never handle the session token, and never store anything sensitive in `localStorage`, `sessionStorage`, or URLs.
