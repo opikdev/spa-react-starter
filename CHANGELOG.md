@@ -12,6 +12,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Typed API client generated from `openapi.yaml`, with problem details mapped to messages and form fields.
 - `pnpm gen:routes` regenerates the route tree, and `pnpm verify` fails when it or the API types are stale.
 - Cookie sessions through a same-origin `/api/` proxy, set by `API_UPSTREAM` at runtime.
+- `add-page` agent skill: the checklist for a new page, from route and loader to tests and docs.
 - One list of pages in `e2e/pages.ts` drives the axe, theme, focus, and Lighthouse tests, and a unit test fails when a route is missing from it.
 - Architecture test that fails on cross-feature imports, direct API calls, and code comments.
 - `pnpm install` turns on the pre-commit hook.

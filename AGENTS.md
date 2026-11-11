@@ -28,6 +28,7 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 
 - Don't commit until `pnpm verify` passes. Its tests need Playwright's Chromium: `pnpm exec playwright install chromium`.
 - Run `pnpm verify` before calling work done. For changes to Docker, nginx, Compose, headers, or a user flow, run `pnpm test:e2e` too. It needs Docker.
+- To add or move a page, follow the [add-page skill](.agents/skills/add-page/SKILL.md).
 - If the check blocks you, fix the cause. Never edit `.agents/check.sh`, `.githooks/`, or the harness workflow to get past it, and never use `--no-verify`. If the request can't be done without that, stop and ask.
 - `pnpm install` turns on the pre-commit hook in `.githooks/` when the folder is a Git repo root.
 - The app relies only on [the API contract](docs/api-contract.md). Never import from another starter. Change the contract in `openapi.yaml`, `src/mocks/`, and the docs together, then run `pnpm gen:api`. Never edit `src/lib/api/schema.d.ts` or `src/routeTree.gen.ts` by hand. `pnpm verify` fails when either is stale.
