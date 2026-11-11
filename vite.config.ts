@@ -21,24 +21,6 @@ export default defineConfig(({ mode }) => {
       usesMocks && msw({ mode: 'worker-only' }),
     ],
     resolve: { tsconfigPaths: true },
-    optimizeDeps: {
-      include: [
-        '@hookform/resolvers/zod',
-        '@tanstack/react-query',
-        '@tanstack/react-router',
-        '@testing-library/react',
-        '@testing-library/user-event',
-        'class-variance-authority',
-        'clsx',
-        'msw',
-        'msw/browser',
-        'openapi-fetch',
-        'radix-ui',
-        'react-hook-form',
-        'tailwind-merge',
-        'zod/mini',
-      ],
-    },
     server: {
       proxy: {
         '/api/': {
