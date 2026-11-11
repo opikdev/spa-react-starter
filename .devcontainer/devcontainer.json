@@ -1,0 +1,9 @@
+{
+  "name": "spa-react-starter",
+  "dockerComposeFile": ["../compose.yaml", "compose.yaml"],
+  "service": "dev",
+  "runServices": ["api-db", "api-migrate", "api"],
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [5173],
+  "postCreateCommand": "apt-get update && apt-get install --yes --no-install-recommends jq && npm install --global pnpm@12.18.0 && pnpm install && pnpm exec playwright install --with-deps chromium && (test -f .env || cp .env.example .env)"
+}
