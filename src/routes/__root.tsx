@@ -2,6 +2,7 @@ import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { createRootRouteWithContext, Link, Outlet, useRouter } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { RouteError } from '@/components/route-states';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { LogoutButton, sessionQueryOptions } from '@/features/auth';
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -46,21 +47,24 @@ function RootLayout() {
           <Link to="/notes" className="text-lg font-semibold tracking-tight">
             Notes
           </Link>
-          {user ? (
-            <div className="flex items-center gap-4">
-              <span className="hidden text-sm text-muted-foreground sm:inline">{user.email}</span>
-              <LogoutButton />
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Link to="/login" className={navLink}>
-                Log in
-              </Link>
-              <Link to="/register" className={navLink}>
-                Create account
-              </Link>
-            </div>
-          )}
+          <div className="flex flex-wrap items-center gap-4">
+            <ThemeToggle />
+            {user ? (
+              <>
+                <span className="hidden text-sm text-muted-foreground sm:inline">{user.email}</span>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                <Link to="/login" className={navLink}>
+                  Log in
+                </Link>
+                <Link to="/register" className={navLink}>
+                  Create account
+                </Link>
+              </>
+            )}
+          </div>
         </nav>
       </header>
       <main id="main" className="mx-auto max-w-2xl px-4 py-10">

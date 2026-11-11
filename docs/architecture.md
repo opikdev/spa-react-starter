@@ -11,11 +11,12 @@ flowchart LR
 
 ## How a page loads
 
-1. **Root.** `src/routes/__root.tsx` runs `GET /v1/users/me` once through `sessionQueryOptions`, which caches the user or `null`.
-2. **Guard.** Routes under `src/routes/_authenticated/` redirect to `/login?redirect=<path>` when the user is `null`. The login page accepts only internal paths in `redirect`.
-3. **Loader.** The route's loader calls `ensureQueryData`, so data starts loading in parallel with the route's code chunk. Hovering a link preloads both.
-4. **Render.** Components read the same query with `useSuspenseQuery`. TanStack Query keeps results fresh for 30 seconds, and the session for 5 minutes.
-5. **Focus.** After each navigation, focus moves to the page's `h1`, and the page sets `document.title`.
+1. **Theme.** `public/theme.js` runs before first paint and sets the `dark` class on `<html>` from the saved choice or the system setting. [Decision 008](decisions/008-theme-toggle-without-inline-script.md) explains why it isn't inline.
+2. **Root.** `src/routes/__root.tsx` runs `GET /v1/users/me` once through `sessionQueryOptions`, which caches the user or `null`.
+3. **Guard.** Routes under `src/routes/_authenticated/` redirect to `/login?redirect=<path>` when the user is `null`. The login page accepts only internal paths in `redirect`.
+4. **Loader.** The route's loader calls `ensureQueryData`, so data starts loading in parallel with the route's code chunk. Hovering a link preloads both.
+5. **Render.** Components read the same query with `useSuspenseQuery`. TanStack Query keeps results fresh for 30 seconds, and the session for 5 minutes.
+6. **Focus.** After each navigation, focus moves to the page's `h1`, and the page sets `document.title`.
 
 A 401 from any call, other than a wrong password, marks the user logged out and sends them to log in, then back to where they were. `createQueryClient` in `src/lib/query-client.ts` does this for every query and mutation.
 
@@ -30,8 +31,9 @@ A 401 from any call, other than a wrong password, marks the user logged out and 
 | `src/features/auth/` | Session query, login, logout, sign-up, and the redirect check |
 | `src/features/notes/` | Notes queries and mutations, the list, and the create and edit forms |
 | `src/lib/api/` | Generated `schema.d.ts`, the `openapi-fetch` client, `request()`, and `ApiError` with user messages |
-| `src/lib/` | Query client, idempotency keys, form error mapping, and error reporting |
-| `src/components/` | Page heading, form fields, route states, and shadcn/ui components in `ui/` |
+| `src/lib/` | Query client, idempotency keys, form error mapping, error reporting, and the theme |
+| `src/components/` | Page heading, form fields, route states, theme toggle, and shadcn/ui components in `ui/` |
+| `public/theme.js` | Applies the saved theme before first paint |
 | `src/mocks/` | MSW handlers that implement the contract in memory |
 | `docker/nginx/` | Server config, security headers, and the startup check for `API_UPSTREAM` |
 

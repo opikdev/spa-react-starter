@@ -12,7 +12,8 @@ A single-page app (SPA): React renders in the browser and calls your API. It's a
 - **Typed client:** `openapi-typescript` generates types from the committed OpenAPI document, and the checks fail when they're stale.
 - **Fast by default:** React 19 with the React Compiler, route-level code splitting, preloading on hover, data loaded in route loaders, and a 140 kB gzip budget for the initial JavaScript.
 - **Hardened image:** non-root nginx that runs on a read-only filesystem, a strict Content Security Policy with Trusted Types, HSTS, precompressed assets, and immutable caching.
-- **Accessible:** WCAG 2.2 AA, with axe finding no violations on any page, keyboard-only flows, and focus moved to each page's heading.
+- **Accessible:** WCAG 2.2 AA in light and dark themes, with axe finding no violations on any page, keyboard-only flows, and focus moved to each page's heading.
+- **Light, dark, or system theme:** the choice is saved, applied before first paint without an inline script, and follows system changes live.
 - **Real error handling:** RFC 9457 problem details become plain messages, field errors land on their fields, 429s say when to retry, and server errors show a request ID to quote.
 - **Runs without a backend:** `pnpm dev:mock` runs the whole app against an in-memory API in the browser, the same one the component tests use.
 - **Agent-ready:** `AGENTS.md`, skills, and checks that run on every commit.
