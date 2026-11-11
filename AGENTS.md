@@ -34,6 +34,7 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 - Never handle the session token, and never store anything sensitive in `localStorage`, `sessionStorage`, or URLs.
 - Call the API only from a feature's `api.ts`, through `request()` in `src/lib/api/request.ts`. Import another feature only through its `index.ts`. `test/architecture.test.ts` enforces both.
 - Load page data in the route's `loader` with `ensureQueryData`, and read it with `useSuspenseQuery`.
+- Don't write code comments. Name things so the code explains itself. Only `biome-ignore` with a reason is allowed. The architecture test fails on any other comment in `src/`, `test/`, or `e2e/`.
 - Start every component that uses react-hook-form with `'use no memo'`, and read form state in children with `useFormState`. The architecture test enforces the directive.
 - Show errors with `errorMessage()` from `src/lib/api/problem.ts`, and put field errors on fields with `setServerFieldErrors()`.
 - Keep the CSP strict: no inline scripts or styles, no `innerHTML`, no libraries that inject `<style>` tags. Add UI components with `pnpm exec shadcn add`, as [docs/architecture.md](docs/architecture.md#ui-components) explains.

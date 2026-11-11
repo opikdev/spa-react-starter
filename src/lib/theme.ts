@@ -19,11 +19,12 @@ function readTheme(): Theme {
   }
 }
 
-function saveTheme(theme: Theme): void {
+function saveTheme(theme: Theme): boolean {
   try {
     localStorage.setItem(storageKey, theme);
+    return true;
   } catch {
-    // Storage can be blocked, so the choice then lasts until the page reloads.
+    return false;
   }
 }
 

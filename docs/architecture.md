@@ -80,6 +80,6 @@ To add a component:
 | Layer | Runs | Against |
 |---|---|---|
 | Unit and component | `pnpm test`, in Chromium through Vitest browser mode | The in-memory API in `src/mocks/` |
-| Architecture | `pnpm test` | The source files' imports |
+| Architecture | `pnpm test` | Imports, the `'use no memo'` directive, and code comments |
 | End to end | `pnpm test:e2e`, with Playwright | The built image and a real example API in Docker |
 | Lighthouse | `pnpm test:e2e` | The signed-in pages of the built image |

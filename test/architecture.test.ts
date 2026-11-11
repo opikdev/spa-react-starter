@@ -1,3 +1,4 @@
+import { parse } from '@babel/parser';
 import { describe, expect, it } from 'vitest';
 
 const sources = import.meta.glob<string>(['/src/**/*.{ts,tsx}', '!/src/**/*.test.{ts,tsx}'], {
@@ -5,6 +6,18 @@ const sources = import.meta.glob<string>(['/src/**/*.{ts,tsx}', '!/src/**/*.test
   import: 'default',
   eager: true,
 });
+
+const ownCode = import.meta.glob<string>(
+  ['/{src,test,e2e}/**/*.{ts,tsx}', '!/src/routeTree.gen.ts', '!/src/lib/api/schema.d.ts'],
+  { query: '?raw', import: 'default', eager: true },
+);
+
+function comments(source: string): string[] {
+  const ast = parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+  return (ast.comments ?? [])
+    .map((comment) => comment.value.trim())
+    .filter((text) => !text.startsWith('biome-ignore '));
+}
 
 function imports(source: string): string[] {
   return [...source.matchAll(/(?:from|import) '([^']+)'/g)].map((match) => match[1] as string);
@@ -70,6 +83,14 @@ describe('architecture', () => {
       .filter(([, source]) => !source.includes("'use no memo';"))
       .map(([file]) => file);
     expect(missing).toEqual([]);
+  });
+
+  it('finds no code comments', () => {
+    expect(Object.keys(ownCode).length).toBeGreaterThan(Object.keys(sources).length);
+    const found = Object.entries(ownCode).flatMap(([file, source]) =>
+      comments(source).map((text) => `${file}: ${text}`),
+    );
+    expect(found).toEqual([]);
   });
 
   it('keeps mocks out of the app', () => {

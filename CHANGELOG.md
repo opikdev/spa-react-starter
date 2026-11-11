@@ -12,6 +12,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Typed API client generated from `openapi.yaml`, with problem details mapped to messages and form fields.
 - `pnpm gen:routes` regenerates the route tree, and `pnpm verify` fails when it or the API types are stale.
 - Cookie sessions through a same-origin `/api/` proxy, set by `API_UPSTREAM` at runtime.
+- Architecture test that fails on cross-feature imports, direct API calls, and code comments.
 - In-memory mock API for `pnpm dev:mock` and the component tests.
 - About 131 kB of initial JavaScript, under a 144 kB budget. Zod and the forms load only with the pages that use them.
 - Non-root nginx image with a strict CSP, Trusted Types, security headers, precompressed assets, and immutable caching.

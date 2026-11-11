@@ -208,6 +208,9 @@ importers:
       '@babel/core':
         specifier: ^8.1.0
         version: 8.1.0
+      '@babel/parser':
+        specifier: 8.1.0
+        version: 8.1.0
       '@biomejs/biome':
         specifier: ^2.6.6
         version: 2.6.6
