@@ -31,7 +31,7 @@ A 401 from any call, other than a wrong password, marks the user logged out and 
 | `src/features/notes/` | Notes queries and mutations, the list, and the create and edit forms |
 | `src/lib/api/` | Generated `schema.d.ts`, the `openapi-fetch` client, `request()`, and `ApiError` with user messages |
 | `src/lib/` | Query client, idempotency keys, form error mapping, and error reporting |
-| `src/components/` | Page heading, form fields, route states, and `ui/` primitives |
+| `src/components/` | Page heading, form fields, route states, and shadcn/ui components in `ui/` |
 | `src/mocks/` | MSW handlers that implement the contract in memory |
 | `docker/nginx/` | Server config, security headers, and the startup check for `API_UPSTREAM` |
 
@@ -53,6 +53,18 @@ flowchart LR
 - `components/` and `lib/` never import features or routes.
 - Only `src/main.tsx` imports `src/mocks/`, behind the mock mode check, so the build drops it.
 - Every component that uses react-hook-form starts with `'use no memo'`, because the React Compiler would memoize its `register()` calls. [Decision 006](decisions/006-keep-forms-out-of-the-react-compiler.md) explains why.
+
+## UI components
+
+`src/components/ui/` holds shadcn/ui components in the `base-nova` style, on Base UI. `components.json` configures the CLI, and `src/index.css` holds the tokens. [Decision 007](decisions/007-shadcn-ui-on-base-ui.md) explains the choice.
+
+To add a component:
+
+1. Run `pnpm exec shadcn add <component>`, then `pnpm exec biome check --write src/components/ui` to match the project's style.
+2. Give each interactive element `pointer-coarse:min-h-11 pointer-coarse:min-w-11`, or `pointer-coarse:h-11` for a fixed-height field, so touch targets are 44px.
+3. Run `pnpm test:e2e`. It fails on any CSP violation or axe finding.
+
+`src/index.css` already applies the focus outline and reduced motion to every component.
 
 ## Tests
 

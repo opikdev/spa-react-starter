@@ -3,8 +3,15 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
 import { errorMessage, isProblem, problemTypes } from '@/lib/api/problem';
 import { setServerFieldErrors } from '@/lib/form';
 import { type NoteInput, noteQueryOptions } from '../api';
@@ -68,7 +75,7 @@ export function EditNote({ noteId, onDeleted }: { noteId: string; onDeleted: () 
         noValidate
         className="space-y-5"
       >
-        {formError && <Alert>{formError}</Alert>}
+        {formError && <Alert variant="destructive">{formError}</Alert>}
         <NoteFields form={form} />
         <div className="flex flex-wrap items-center gap-4">
           <Button type="submit" disabled={update.isPending}>
@@ -80,22 +87,28 @@ export function EditNote({ noteId, onDeleted }: { noteId: string; onDeleted: () 
         </div>
       </form>
       <DeleteNote note={data.note} onDeleted={onDeleted} />
-      <Dialog
-        open={conflict}
-        onClose={() => setConflict(false)}
-        title="This note changed while you were editing"
-        description="Someone saved a newer version. Load it to see their changes, which discards your edits, or save your version over theirs."
-      >
-        <Button variant="secondary" onClick={() => setConflict(false)}>
-          Keep editing
-        </Button>
-        <Button variant="secondary" onClick={() => resolveConflict('latest')}>
-          Load latest version
-        </Button>
-        <Button variant="destructive" onClick={() => resolveConflict('mine')}>
-          Overwrite with my edits
-        </Button>
-      </Dialog>
+      <AlertDialog open={conflict} onOpenChange={setConflict}>
+        <AlertDialogContent className="data-[size=default]:sm:max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle>This note changed while you were editing</AlertDialogTitle>
+            <AlertDialogDescription>
+              Someone saved a newer version. Load it to see their changes, which discards your
+              edits, or save your version over theirs.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={() => setConflict(false)}>
+              Keep editing
+            </Button>
+            <Button variant="outline" onClick={() => resolveConflict('latest')}>
+              Load latest version
+            </Button>
+            <Button variant="destructive" onClick={() => resolveConflict('mine')}>
+              Overwrite with my edits
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

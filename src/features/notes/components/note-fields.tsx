@@ -15,7 +15,7 @@ export function NoteFields({ form }: { form: UseFormReturn<NoteInput> }) {
         {(props) => <Input autoComplete="off" {...props} {...form.register('title')} />}
       </FormField>
       <FormField label="Note" error={errors.body?.message}>
-        {(props) => <Textarea {...props} {...form.register('body')} />}
+        {(props) => <Textarea className="min-h-48" {...props} {...form.register('body')} />}
       </FormField>
     </>
   );

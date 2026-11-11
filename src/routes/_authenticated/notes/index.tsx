@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { PageHeading } from '@/components/page-heading';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { NoteList, notesQueryOptions } from '@/features/notes';
 
 export const Route = createFileRoute('/_authenticated/notes/')({
@@ -13,9 +13,9 @@ function NotesPage() {
     <section className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <PageHeading>Your notes</PageHeading>
-        <Button asChild>
-          <Link to="/notes/new">New note</Link>
-        </Button>
+        <Link to="/notes/new" className={buttonVariants()}>
+          New note
+        </Link>
       </div>
       <NoteList />
     </section>

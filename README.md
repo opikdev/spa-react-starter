@@ -62,6 +62,7 @@ pnpm dev:mock
 | Run lint, types, API type freshness, tests, coverage, bundle budgets, and repo checks | `pnpm verify` |
 | Run the end-to-end tests against the image and an example API | `pnpm test:e2e` |
 | Build the production files into `dist/` | `pnpm build` |
+| Add a shadcn/ui component | `pnpm exec shadcn add <component>` |
 
 `pnpm test:e2e` uses the TypeScript example API. Set `E2E_API` to `go` or `fastapi` to run it against the others.
 
@@ -80,7 +81,7 @@ pnpm dev:mock
 | `src/routes/` | File-based routes: loaders, guards, and pages |
 | `src/features/` | One folder per feature, such as `auth` and `notes`, with its API calls, hooks, and components |
 | `src/lib/api/` | The generated schema, the API client, and problem details handling |
-| `src/components/` | Shared components, with shadcn/ui-style primitives in `ui/` |
+| `src/components/` | Shared components, with shadcn/ui components in `ui/` |
 | `src/mocks/` | The in-memory API for `pnpm dev:mock` and tests |
 | `test/`, `e2e/` | App-level and architecture tests, and Playwright end-to-end tests |
 | `docker/` | nginx configuration and the example API's database setup |

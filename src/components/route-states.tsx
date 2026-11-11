@@ -28,7 +28,7 @@ export function RouteError({ error, reset }: ErrorComponentProps) {
       <PageHeading>This page didn’t load</PageHeading>
       <p>{errorMessage(error)}</p>
       <Button
-        variant="secondary"
+        variant="outline"
         onClick={() => {
           reset();
           void router.invalidate();

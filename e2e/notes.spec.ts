@@ -41,19 +41,24 @@ test('creates, pages, edits, resolves a conflict, and deletes notes', async ({ p
 
   await page.getByLabel('Title').fill('My stale edit');
   await page.getByRole('button', { name: 'Save changes' }).click();
-  const conflict = page.getByRole('dialog', { name: 'This note changed while you were editing' });
+  const conflict = page.getByRole('alertdialog', {
+    name: 'This note changed while you were editing',
+  });
   await expect(conflict).toBeVisible();
   await expectAccessible(page);
   await conflict.getByRole('button', { name: 'Load latest version' }).click();
   await expect(conflict).toBeHidden();
   await expect(page.getByLabel('Title')).toHaveValue('Changed in another tab');
 
+  await page.setViewportSize({ width: 375, height: 480 });
+  expect(await page.evaluate(() => document.documentElement.scrollHeight > innerHeight)).toBe(true);
   await page.getByRole('button', { name: 'Delete note' }).click();
-  const confirm = page.getByRole('dialog', { name: 'Delete this note?' });
+  const confirm = page.getByRole('alertdialog', { name: 'Delete this note?' });
   await expect(confirm.getByRole('button', { name: 'Keep note' })).toBeFocused();
   await expectAccessible(page);
   await page.keyboard.press('Escape');
   await expect(confirm).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Delete note' })).toBeFocused();
   await page.getByRole('button', { name: 'Delete note' }).click();
   await confirm.getByRole('button', { name: 'Delete note' }).click();
 

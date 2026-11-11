@@ -41,7 +41,7 @@ export function CreateNote({ onCreated }: { onCreated: (note: Note) => void }) {
 
   return (
     <form onSubmit={submit} noValidate className="space-y-5">
-      {formError && <Alert>{formError}</Alert>}
+      {formError && <Alert variant="destructive">{formError}</Alert>}
       <NoteFields form={form} />
       <Button type="submit" disabled={create.isPending}>
         {create.isPending ? 'Saving…' : 'Save note'}

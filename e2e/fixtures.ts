@@ -35,6 +35,9 @@ export const test = base.extend<{ problems: string[] }>({
 export { expect };
 
 export async function expectAccessible(page: Page) {
+  await page.evaluate(() =>
+    Promise.allSettled(document.getAnimations().map((animation) => animation.finished)),
+  );
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();

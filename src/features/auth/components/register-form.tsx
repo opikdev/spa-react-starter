@@ -39,7 +39,7 @@ export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <form onSubmit={submit} noValidate className="space-y-5">
-      {formError && <Alert>{formError}</Alert>}
+      {formError && <Alert variant="destructive">{formError}</Alert>}
       <FormField label="Email" error={errors.email?.message}>
         {(props) => (
           <Input type="email" autoComplete="email" {...props} {...form.register('email')} />

@@ -43,9 +43,9 @@ export function NoteList() {
       <p role="status" className="text-sm text-muted-foreground">
         Showing {notes.length} {notes.length === 1 ? 'note' : 'notes'}
       </p>
-      {isFetchNextPageError && <Alert>{errorMessage(error)}</Alert>}
+      {isFetchNextPageError && <Alert variant="destructive">{errorMessage(error)}</Alert>}
       {hasNextPage && (
-        <Button variant="secondary" disabled={isFetchingNextPage} onClick={() => fetchNextPage()}>
+        <Button variant="outline" disabled={isFetchingNextPage} onClick={() => fetchNextPage()}>
           {isFetchingNextPage ? 'Loading…' : 'Load more notes'}
         </Button>
       )}

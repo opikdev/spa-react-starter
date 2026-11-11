@@ -15,7 +15,7 @@ export function LogoutButton() {
         </p>
       )}
       <Button
-        variant="secondary"
+        variant="outline"
         disabled={logOut.isPending}
         onClick={() => logOut.mutate(undefined, { onSuccess: () => navigate({ to: '/login' }) })}
       >

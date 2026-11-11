@@ -1,6 +1,6 @@
 # Agent guide
 
-A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI client, cookie sessions through a same-origin proxy, Tailwind with shadcn/ui-style components, and a hardened nginx image. Auth and notes are the sample features to copy or replace.
+A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI client, cookie sessions through a same-origin proxy, Tailwind with shadcn/ui components on Base UI, and a hardened nginx image. Auth and notes are the sample features to copy or replace.
 
 | Path | Purpose |
 |---|---|
@@ -35,7 +35,7 @@ A single-page app (SPA) in React 19: TanStack Router and Query, a typed OpenAPI 
 - Load page data in the route's `loader` with `ensureQueryData`, and read it with `useSuspenseQuery`.
 - Start every component that uses react-hook-form with `'use no memo'`, and read form state in children with `useFormState`. The architecture test enforces the directive.
 - Show errors with `errorMessage()` from `src/lib/api/problem.ts`, and put field errors on fields with `setServerFieldErrors()`.
-- Keep the CSP strict: no inline scripts or styles, no `innerHTML`, no libraries that inject `<style>` tags. Use the native `<dialog>` through `src/components/ui/dialog.tsx`.
+- Keep the CSP strict: no inline scripts or styles, no `innerHTML`, no libraries that inject `<style>` tags. Add UI components with `pnpm exec shadcn add`, as [docs/architecture.md](docs/architecture.md#ui-components) explains.
 - Every page has one `PageHeading`, which sets the title and receives focus. Use tokens from `src/index.css`, never raw colors.
 - Only `VITE_` variables reach the browser, so never put secrets in them.
 - Don't edit files listed in `.baseline.sha256`. They come from [opikdev/starters](https://github.com/opikdev/starters).

@@ -220,13 +220,13 @@ describe('editing a note', () => {
     await user.clear(title);
     await user.type(title, 'My title');
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
-    const dialog = await screen.findByRole('dialog', {
+    const dialog = await screen.findByRole('alertdialog', {
       name: 'This note changed while you were editing',
     });
     await user.click(within(dialog).getByRole('button', { name: 'Load latest version' }));
 
     await waitFor(() => expect(screen.getByLabelText('Title')).toHaveValue('Their title'));
-    expect(screen.queryByRole('dialog')).toBeNull();
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
   });
 
   it('overwrites the latest version when the user chooses to', async () => {
@@ -255,7 +255,7 @@ describe('editing a note', () => {
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
     await user.click(await screen.findByRole('button', { name: 'Keep editing' }));
 
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
     expect(screen.getByLabelText('Title')).toHaveValue('My title');
   });
 
@@ -295,8 +295,10 @@ describe('deleting a note', () => {
     const user = userEvent.setup();
 
     await user.click(await screen.findByRole('button', { name: 'Delete note' }));
-    const dialog = await screen.findByRole('dialog', { name: 'Delete this note?' });
-    expect(within(dialog).getByRole('button', { name: 'Keep note' })).toHaveFocus();
+    const dialog = await screen.findByRole('alertdialog', { name: 'Delete this note?' });
+    await waitFor(() =>
+      expect(within(dialog).getByRole('button', { name: 'Keep note' })).toHaveFocus(),
+    );
     await user.click(within(dialog).getByRole('button', { name: 'Delete note' }));
 
     expect(await screen.findByRole('heading', { name: 'Your notes' })).toBeVisible();
@@ -312,7 +314,7 @@ describe('deleting a note', () => {
     await user.click(await screen.findByRole('button', { name: 'Delete note' }));
     await user.click(await screen.findByRole('button', { name: 'Keep note' }));
 
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
     expect(noteTitled('Launch checklist')).toBeDefined();
   });
 
@@ -330,7 +332,7 @@ describe('deleting a note', () => {
     const user = userEvent.setup();
 
     await user.click(await screen.findByRole('button', { name: 'Delete note' }));
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('alertdialog');
     await user.click(within(dialog).getByRole('button', { name: 'Delete note' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
