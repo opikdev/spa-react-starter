@@ -83,4 +83,4 @@ To add a component:
 | Architecture | `pnpm test` | Imports, the `'use no memo'` directive, and code comments |
 | End to end | `pnpm test:e2e`, with Playwright | The built image and a real example API in Docker |
 | Page list | `pnpm test` | `test/pages.test.ts` fails when a route with a component is missing from `e2e/pages.ts` |
-| Axe in both themes, focus, and Lighthouse | `pnpm test:e2e` | Every page in `e2e/pages.ts`, in the built image. Signed-out pages skip Lighthouse's `errors-in-console`, because the session check logs a 401 |
+| Axe in both themes, focus, and Lighthouse | `pnpm test:e2e` | Every page in `e2e/pages.ts`, in the built image. Lighthouse runs last, alone, so other tests don't skew its scores. Signed-out pages skip Lighthouse's `errors-in-console`, because the session check logs a 401 |

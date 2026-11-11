@@ -12,5 +12,13 @@ export default defineConfig({
     baseURL: `http://localhost:${port}`,
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: /lighthouse\.spec\.ts/ },
+    {
+      name: 'lighthouse',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /lighthouse\.spec\.ts/,
+      dependencies: ['chromium'],
+    },
+  ],
 });
