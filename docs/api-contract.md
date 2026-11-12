@@ -49,14 +49,14 @@ Every error is `application/problem+json` per [RFC 9457](https://www.rfc-editor.
 
 | Type | How the app shows it |
 |---|---|
-| `urn:problem:validation-failed` | Each `errors` item on the form field named by `field`, or the form's message if no field matches |
+| `urn:problem:validation-failed` | Each `errors` item on the form field named by `field`. An item with an empty `field` is about the whole body, and its `detail` becomes the form's message. A 400 without `errors`, such as a database check that failed, shows its `detail` instead |
 | `urn:problem:invalid-credentials` | A message to check the email and password |
 | `urn:problem:unauthorized` | Sends the user to log in, then back |
 | `urn:problem:email-taken` | A message on the email field |
 | `urn:problem:not-found` | The note's not found page |
 | `urn:problem:version-mismatch` | The conflict dialog |
 | `urn:problem:forbidden` | A message to reload and retry |
-| Any 429 | When to retry, from the `Retry-After` header in seconds |
+| Any 429 | When to retry, from the `Retry-After` header in seconds. The app ignores `RateLimit` and `RateLimit-Policy` |
 | Any 5xx or unknown type | The `detail`, or a retry message for 5xx, plus the `X-Request-Id` to quote |
 
 Every response should carry `X-Request-Id`, so users can quote it when something fails.

@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- Compose and the end-to-end tests run the hardened example APIs, `api-hono-starter` 0.5.0, `api-go-starter` 0.4.0, and `api-fastapi-starter` 0.4.0, on a read-only filesystem. `openapi.yaml` follows their contract, with the `RateLimit` and `RateLimit-Policy` headers.
+- A validation failure that names no form field, such as an error about the whole body with an empty `field` or a 400 from a database check, shows the API's `detail` instead of pointing to field messages that aren't there.
+
 ## [0.1.0] - 2026-11-12
 
 ### Added

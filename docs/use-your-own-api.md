@@ -34,7 +34,7 @@ Serve the app over HTTPS anywhere but `localhost`, because the session cookie is
    API_SCHEMA=http://localhost:4000/openapi.json pnpm gen:api
    ```
 
-   This copies the document into `openapi.yaml`, then writes `src/lib/api/schema.d.ts`.
+   This copies the document into `openapi.yaml`, then writes `src/lib/api/schema.d.ts`. The example APIs serve `/openapi.json` only with `DOCS_ENABLED=true`, and return 404 without it, so turn it on or point `API_SCHEMA` at a file.
 
 2. Run `pnpm typecheck`. Every call that no longer matches your API fails here.
 3. Commit both files. `pnpm verify` fails when `schema.d.ts` doesn't match `openapi.yaml`.

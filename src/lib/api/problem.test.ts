@@ -74,6 +74,38 @@ describe('errorMessage', () => {
     );
   });
 
+  it('points to the fields when the API names them', () => {
+    const error = apiError(400, {
+      type: problemTypes.validationFailed,
+      detail: 'The request has invalid fields.',
+      errors: [{ field: 'title', detail: 'Too long' }],
+    });
+
+    expect(errorMessage(error)).toBe('Some fields need fixing. Check the messages next to them.');
+  });
+
+  it('shows the detail of a validation failure that names no field', () => {
+    const error = apiError(400, {
+      type: problemTypes.validationFailed,
+      detail: 'A value is outside the allowed range. Fix it and retry.',
+    });
+
+    expect(errorMessage(error)).toBe('A value is outside the allowed range. Fix it and retry.');
+  });
+
+  it('shows errors about the whole body, which have an empty field', () => {
+    const error = apiError(400, {
+      type: problemTypes.validationFailed,
+      detail: 'The request has invalid fields.',
+      errors: [
+        { field: 'title', detail: 'Too long' },
+        { field: '', detail: 'Send at least one field.' },
+      ],
+    });
+
+    expect(errorMessage(error)).toBe('Send at least one field.');
+  });
+
   it('adds the request ID to server errors', () => {
     const error = apiError(
       500,
