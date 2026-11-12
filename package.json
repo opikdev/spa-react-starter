@@ -1,6 +1,6 @@
 {
   "name": "spa-react-starter",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Production-ready React single-page app with TanStack Router and Query, a typed OpenAPI client, cookie sessions, and a hardened nginx image",
   "license": "MIT",
