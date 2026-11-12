@@ -85,6 +85,11 @@ export function errorMessage(error: unknown): string {
       ? 'Too many requests. Wait a minute, then try again.'
       : `Too many requests. Try again in ${wait} ${wait === 1 ? 'second' : 'seconds'}.`;
   }
+  if (error.type === problemTypes.validationFailed) {
+    if (error.fieldErrors.length === 0) return error.detail;
+    const bodyErrors = error.fieldErrors.filter((item) => item.field === '');
+    if (bodyErrors.length > 0) return bodyErrors.map((item) => item.detail).join(' ');
+  }
   const known = messages[error.type];
   if (known) return known;
   const message =

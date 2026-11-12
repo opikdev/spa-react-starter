@@ -2,11 +2,14 @@
 # docker compose -f compose.yaml -f compose.fastapi.yaml up --build --wait web
 services:
   api-migrate:
-    image: ghcr.io/opikdev/api-fastapi-starter:0.3.0
+    image: ghcr.io/opikdev/api-fastapi-starter:0.4.0
     command: [migrate]
+    tmpfs: [/tmp]
 
   api-seed:
-    image: ghcr.io/opikdev/api-fastapi-starter:0.3.0
+    image: ghcr.io/opikdev/api-fastapi-starter:0.4.0
+    read_only: true
+    tmpfs: [/tmp]
     command: [seed]
     environment:
       MIGRATION_DATABASE_URL: postgres://api_owner:api_owner_dev_password@api-db:5432/api
@@ -15,7 +18,8 @@ services:
         condition: service_completed_successfully
 
   api:
-    image: ghcr.io/opikdev/api-fastapi-starter:0.3.0
+    image: ghcr.io/opikdev/api-fastapi-starter:0.4.0
+    tmpfs: [/tmp]
     depends_on:
       api-seed:
         condition: service_completed_successfully

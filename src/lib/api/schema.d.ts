@@ -265,6 +265,10 @@ export interface components {
         /** @description Request validation failed */
         ValidationFailed: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -274,6 +278,10 @@ export interface components {
         /** @description Authentication required or invalid credentials */
         Unauthorized: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 /** @description `Bearer` */
                 "WWW-Authenticate"?: string;
                 /** @description Clears `__Host-session` when the request sent an invalid or expired session cookie */
@@ -287,6 +295,10 @@ export interface components {
         /** @description Cross-origin request blocked */
         Forbidden: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -296,6 +308,10 @@ export interface components {
         /** @description Resource not found */
         NotFound: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -305,6 +321,10 @@ export interface components {
         /** @description Email already registered */
         EmailTaken: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -314,6 +334,23 @@ export interface components {
         /** @description Resource version mismatch */
         VersionMismatch: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["Problem"];
+            };
+        };
+        /** @description Payload too large */
+        PayloadTooLarge: {
+            headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -323,6 +360,10 @@ export interface components {
         /** @description Unsupported media type */
         UnsupportedMediaType: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -332,6 +373,10 @@ export interface components {
         /** @description Idempotency key reused */
         IdempotencyKeyReused: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -341,6 +386,10 @@ export interface components {
         /** @description Precondition required */
         PreconditionRequired: {
             headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -350,8 +399,11 @@ export interface components {
         /** @description Too many requests */
         RateLimited: {
             headers: {
-                /** @description Seconds to wait before retrying */
-                "Retry-After"?: number;
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
+                "Retry-After": components["headers"]["Retry-After"];
                 [name: string]: unknown;
             };
             content: {
@@ -361,8 +413,21 @@ export interface components {
         /** @description Service unavailable */
         ServiceUnavailable: {
             headers: {
-                /** @description Seconds to wait before retrying */
-                "Retry-After"?: number;
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                "Retry-After": components["headers"]["Retry-After"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["Problem"];
+            };
+        };
+        /** @description Internal server error */
+        InternalError: {
+            headers: {
+                "X-Request-Id": components["headers"]["X-Request-Id"];
+                RateLimit: components["headers"]["RateLimit"];
+                "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                "Cache-Control": components["headers"]["Cache-Control"];
                 [name: string]: unknown;
             };
             content: {
@@ -372,7 +437,24 @@ export interface components {
     };
     parameters: never;
     requestBodies: never;
-    headers: never;
+    headers: {
+        /** @description ID of this request. Quote it when you report a problem */
+        "X-Request-Id": string;
+        /** @description What is left of each policy in `RateLimit-Policy`, per draft-ietf-httpapi-ratelimit-headers, such as `"global";r=238;t=25`. On a 429, only the policy that ran out */
+        RateLimit: string;
+        /** @description The rate limit policies that apply, such as `"global";q=300;w=60, "auth";q=10;w=60`. A 429 for too many failed logins adds `"login";q=5;w=900` */
+        "RateLimit-Policy": string;
+        /** @description Seconds to wait before retrying */
+        "Retry-After": number;
+        /** @description `no-store` */
+        "Cache-Control": string;
+        /** @description Version of the note, for If-Match */
+        ETag: string;
+        /** @description URL of the new resource */
+        Location: string;
+        /** @description `true` when this response replays an earlier request */
+        "Idempotency-Replayed": string;
+    };
     pathItems: never;
 }
 export type $defs = Record<string, never>;
@@ -389,12 +471,14 @@ export interface operations {
             /** @description The process is running */
             200: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["HealthStatus"];
                 };
             };
+            500: components["responses"]["InternalError"];
         };
     };
     getReadiness: {
@@ -409,12 +493,14 @@ export interface operations {
             /** @description Ready for traffic */
             200: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["HealthStatus"];
                 };
             };
+            500: components["responses"]["InternalError"];
             503: components["responses"]["ServiceUnavailable"];
         };
     };
@@ -434,6 +520,10 @@ export interface operations {
             /** @description User created */
             201: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -443,8 +533,10 @@ export interface operations {
             400: components["responses"]["ValidationFailed"];
             403: components["responses"]["Forbidden"];
             409: components["responses"]["EmailTaken"];
+            413: components["responses"]["PayloadTooLarge"];
             415: components["responses"]["UnsupportedMediaType"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     createSession: {
@@ -463,8 +555,10 @@ export interface operations {
             /** @description Session created */
             201: {
                 headers: {
-                    /** @description `no-store` */
-                    "Cache-Control"?: string;
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     /** @description When `delivery` is `cookie`: `__Host-session=<token>; Path=/; Max-Age=<SESSION_TTL_HOURS in seconds>; HttpOnly; Secure; SameSite=Strict` */
                     "Set-Cookie"?: string;
                     [name: string]: unknown;
@@ -476,8 +570,10 @@ export interface operations {
             400: components["responses"]["ValidationFailed"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
+            413: components["responses"]["PayloadTooLarge"];
             415: components["responses"]["UnsupportedMediaType"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     deleteCurrentSession: {
@@ -492,6 +588,10 @@ export interface operations {
             /** @description Session revoked */
             204: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     /** @description Always clears the session cookie: `__Host-session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict` */
                     "Set-Cookie"?: string;
                     [name: string]: unknown;
@@ -501,6 +601,7 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     getCurrentUser: {
@@ -515,6 +616,10 @@ export interface operations {
             /** @description Current user */
             200: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -523,6 +628,7 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     listNotes: {
@@ -541,6 +647,10 @@ export interface operations {
             /** @description A page of notes */
             200: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -550,6 +660,7 @@ export interface operations {
             400: components["responses"]["ValidationFailed"];
             401: components["responses"]["Unauthorized"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     createNote: {
@@ -571,12 +682,13 @@ export interface operations {
             /** @description Note created */
             201: {
                 headers: {
-                    /** @description Version of the note, for If-Match */
-                    ETag?: string;
-                    /** @description URL of the new note */
-                    Location?: string;
-                    /** @description `true` when this response replays an earlier request */
-                    "Idempotency-Replayed"?: string;
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
+                    ETag: components["headers"]["ETag"];
+                    Location: components["headers"]["Location"];
+                    "Idempotency-Replayed": components["headers"]["Idempotency-Replayed"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -586,9 +698,11 @@ export interface operations {
             400: components["responses"]["ValidationFailed"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
+            413: components["responses"]["PayloadTooLarge"];
             415: components["responses"]["UnsupportedMediaType"];
             422: components["responses"]["IdempotencyKeyReused"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     getNote: {
@@ -605,8 +719,11 @@ export interface operations {
             /** @description The note */
             200: {
                 headers: {
-                    /** @description Version of the note, for If-Match */
-                    ETag?: string;
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
+                    ETag: components["headers"]["ETag"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -616,6 +733,7 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     deleteNote: {
@@ -632,6 +750,10 @@ export interface operations {
             /** @description Note deleted */
             204: {
                 headers: {
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
                     [name: string]: unknown;
                 };
                 content?: never;
@@ -640,6 +762,7 @@ export interface operations {
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
     updateNote: {
@@ -663,8 +786,11 @@ export interface operations {
             /** @description The updated note */
             200: {
                 headers: {
-                    /** @description Version of the note, for If-Match */
-                    ETag?: string;
+                    "X-Request-Id": components["headers"]["X-Request-Id"];
+                    RateLimit: components["headers"]["RateLimit"];
+                    "RateLimit-Policy": components["headers"]["RateLimit-Policy"];
+                    "Cache-Control": components["headers"]["Cache-Control"];
+                    ETag: components["headers"]["ETag"];
                     [name: string]: unknown;
                 };
                 content: {
@@ -676,9 +802,11 @@ export interface operations {
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
             412: components["responses"]["VersionMismatch"];
+            413: components["responses"]["PayloadTooLarge"];
             415: components["responses"]["UnsupportedMediaType"];
             428: components["responses"]["PreconditionRequired"];
             429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
         };
     };
 }

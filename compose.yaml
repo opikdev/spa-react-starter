@@ -35,7 +35,8 @@ services:
       retries: 90
 
   api-migrate:
-    image: ghcr.io/opikdev/api-hono-starter:0.4.0
+    image: ghcr.io/opikdev/api-hono-starter:0.5.0
+    read_only: true
     command: [sh, -c, node src/db/migrate.ts && node src/db/seed.ts]
     environment:
       MIGRATION_DATABASE_URL: postgres://api_owner:api_owner_dev_password@api-db:5432/api
@@ -45,7 +46,10 @@ services:
         condition: service_healthy
 
   api:
-    image: ghcr.io/opikdev/api-hono-starter:0.4.0
+    image: ghcr.io/opikdev/api-hono-starter:0.5.0
+    read_only: true
+    # Above each example API's default drain plus shutdown timeout, so requests in flight finish first.
+    stop_grace_period: 45s
     environment:
       DATABASE_URL: postgres://api_app:api_app_dev_password@api-db:5432/api
       TRUST_PROXY_HOPS: "1"
